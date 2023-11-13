@@ -35,7 +35,7 @@ const HomeScreen = () => {
        <Text className="font-bold text-xl">Current Location
        <Icons.ChevronDownIcon size={20} color="#00CCBB"/></Text>
       </View>
-      <Icons.UserIcon size={35} color="#00CCBB"/>
+      <Icons.UserIcon size={32} color="#00CCBB"/>
     </View>
     {/* search */}
 
