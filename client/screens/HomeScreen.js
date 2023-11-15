@@ -1,5 +1,5 @@
 import { Image, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
@@ -7,14 +7,36 @@ import {
 import * as Icons from "react-native-heroicons/outline"
 import Catagories from '../components/Catagories';
 import FeaturedRow from '../components/FeaturedRow';
+import client from '../sanity';
 
 const HomeScreen = () => {
 
   const insets = useSafeAreaInsets();
+  const [featuredCatagories, setFeaturedCatagories] =  useState([])
+
+
+
+
+  useEffect(() => {
+    client.fetch(
+    `      
+      *[_type == "featured"] {
+        ...,
+        restaurants[]->{
+          ...,
+          dishes[]->
+        }
+      }`
+    )
+    .then((data)=>{
+      setFeaturedCatagories(data)
+    })
+  }, [])
+
 
   return (
-    <View>
-    <View className="bg-white pt-5 pb-3" >
+    
+    <View className="bg-white pt-2 mb-0 flex-1" >
     <View
     className="flex-row pb-3 items-center mx-4 space-x-2"
       style={{
@@ -39,8 +61,8 @@ const HomeScreen = () => {
     </View>
     {/* search */}
 
-    <View className="flex-row items-center space-x-2 mx-4 mt-3">
-    <View className="flex-row space-x-2 flex-1 bg-gray-200 p-3">
+    <View className="flex-row items-center space-x-2 mx-4 mt-3 mb-3">
+    <View className="flex-row items-center space-x-2 flex-1 bg-gray-200 p-3">
       <Icons.MagnifyingGlassIcon color="gray" size={20}/>
       <TextInput placeholder='Restaurants and Cuisines'
       keyboardType='default'/>
@@ -50,37 +72,27 @@ const HomeScreen = () => {
 
 
 
-    </View>
+    
 
         {/* scrollview */}
 
-        <ScrollView className="bg-gray-100">  
+        <ScrollView className="bg-gray-100 flex-1">  
 
         {/* catagories */}
         <Catagories/>
-        {/* featured rows */}
-        <FeaturedRow
-        id="1"
-        title="Featured"
-        description="Paid placements from our partners"
-        featuredCatagories="Featured"/>
 
-
-        <FeaturedRow
-        id="12"
-        title="Tasty discounts"
-        description="Paid placements from our partners"
-        featuredCatagories="Featured"/>
-
-
-        <FeaturedRow
-        id="13"
-        title="Offers near you"
-        description="Paid placements from our partners"
-        featuredCatagories="Featured"/>
+        {featuredCatagories?.map((catagory)=> (
+          <FeaturedRow
+          key={catagory._id}
+          id={catagory._id}
+          title={catagory.name}
+          description={catagory.short_description}
+          imgUrl= {catagory.image}/>
+        ))}
   
       </ScrollView>
       </View>
+      
   );
 };
 

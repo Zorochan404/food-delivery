@@ -1,10 +1,35 @@
 import { View, Text, ScrollView } from 'react-native'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import * as Icons from "react-native-heroicons/outline"
 import RestaurantCard from './RestaurantCard'
+import client from '../sanity'
 
 
-const FeaturedRow = ({title, description, featuredCatagories}) => {
+const FeaturedRow = ({id ,title, description, imgUrl}) => {
+const [restaurant, setRestaurants] = useState()
+
+
+
+
+  useEffect(() => {
+    client.fetch(
+    `      
+      *[_type == "featured" && _id == $id] {
+        ...,
+        restaurants[]->{
+          ...,
+          dishes[]->,
+          type->{name}
+        },
+      }[0]`,{id: id}
+    )
+    .then((data)=>{
+      setRestaurants(data?.restaurants)
+    })
+  }, [])
+
+  console.log(restaurant)
+
   return (
     <View>
       <View className="mt-4 flex-row items-center justify-between px-4">
@@ -21,57 +46,25 @@ const FeaturedRow = ({title, description, featuredCatagories}) => {
       className="pt-4">
 
         {/* RestaurantCard */}
-        <RestaurantCard
-        imgUrl="https://links.papareact.com/gn7"
-        id={123}
-        title= "Nuts and Brews"
-        short_description = "this a test description"
-        rating= {4.5}
-        genre = "Japanese"
-        dishes ={[]}
-        long = {20}
-        lat = {0}
-        adderss = "123 Main Street"
-        />
 
-      <RestaurantCard
-        imgUrl="https://links.papareact.com/gn7"
-        id={124}
-        title= "Nuts and Brews"
-        short_description = "this a test description"
-        rating= {4.5}
-        genre = "Japanese"
-        dishes ={[]}
-        long = {20}
-        lat = {0}
-        adderss = "123 Main Street"
-        />
+        {restaurant?.map((catagory) => (
+          <RestaurantCard
+          key={catagory._id}
+          imgUrl={catagory.image}
+          id={catagory._id}
+          title= {catagory.name}
+          short_description = {catagory.short_description}
+          rating= {catagory.rating}
+          genre = {catagory.type?.name}
+          dishes ={catagory.dishes}
+          long = {catagory.lon}
+          lat = {catagory.lat}
+          adderss ={catagory.address}
+          />
 
-      <RestaurantCard
-        imgUrl="https://links.papareact.com/gn7"
-        id={125}
-        title= "Nuts and Brews"
-        short_description = "this a test description"
-        rating= {4.5}
-        genre = "Japanese"
-        dishes ={[]}
-        long = {20}
-        lat = {0}
-        adderss = "123 Main Street"
-        />
 
-      <RestaurantCard
-        imgUrl="https://links.papareact.com/gn7"
-        id={126}
-        title= "Nuts and Brews"
-        short_description = "this a test description"
-        rating= {4.5}
-        genre = "Japanese"
-        dishes ={[]}
-        long = {20}
-        lat = {0}
-        adderss = "123 Main Street"
-        />
+        ))}
+        
       </ScrollView>
     </View>
   )
