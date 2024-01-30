@@ -6,6 +6,9 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import RestaurantScreen from './screens/RestaurantScreen';
+import { Provider } from 'react-redux';
+import {Store} from './Store';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +21,7 @@ const App = () => {
 
     <SafeAreaProvider>
       <NavigationContainer>
+        <Provider store= {Store}>
       <Stack.Navigator>
         <Stack.Screen
           name="home"
@@ -26,7 +30,15 @@ const App = () => {
             headerShown:false
           }}
         />
+        <Stack.Screen
+          name="restaurant"
+          component={RestaurantScreen}
+          options={{
+            headerShown:false
+          }}
+        />
       </Stack.Navigator>
+      </Provider>
     </NavigationContainer>
     </SafeAreaProvider>
     
@@ -34,3 +46,4 @@ const App = () => {
 }
 
 export default App;
+
