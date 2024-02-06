@@ -8,7 +8,11 @@ import {
 } from 'react-native-safe-area-context';
 import RestaurantScreen from './screens/RestaurantScreen';
 import { Provider } from 'react-redux';
-import {Store} from './Store';
+import store from './store';
+import BasketScreen from './screens/BasketScreen';
+import PreparingScreen from './screens/PreparingScreen';
+import DeliveryScreen from './screens/DeliveryScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +25,7 @@ const App = () => {
 
     <SafeAreaProvider>
       <NavigationContainer>
-        <Provider store= {Store}>
+        <Provider store= {store}>
       <Stack.Navigator>
         <Stack.Screen
           name="home"
@@ -35,6 +39,28 @@ const App = () => {
           component={RestaurantScreen}
           options={{
             headerShown:false
+          }}
+        />
+        <Stack.Screen
+          name="basketscreen"
+          component={BasketScreen}
+          options={{
+            headerShown:false,
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="preparingscreen"
+          component={PreparingScreen}
+          options={{
+            headerShown:false,
+          }}
+        />
+        <Stack.Screen
+          name="delivery"
+          component={DeliveryScreen}
+          options={{
+            headerShown:false,
           }}
         />
       </Stack.Navigator>

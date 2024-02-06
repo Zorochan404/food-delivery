@@ -8,6 +8,7 @@ import * as Icons from "react-native-heroicons/outline"
 import Catagories from '../components/Catagories';
 import FeaturedRow from '../components/FeaturedRow';
 import client from '../sanity';
+import GlobalStyles from '../GlobalStyles';
 
 const HomeScreen = () => {
 
@@ -35,16 +36,11 @@ const HomeScreen = () => {
 
 
   return (
-    
+    <SafeAreaView style={GlobalStyles.droidSafeArea}>
     <View className="bg-white pt-2 mb-0 flex-1" >
     <View
     className="flex-row pb-3 items-center mx-4 space-x-2"
-      style={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
+
     >
       <Image
        source={{
@@ -92,6 +88,7 @@ const HomeScreen = () => {
   
       </ScrollView>
       </View>
+      </SafeAreaView>
       
   );
 };

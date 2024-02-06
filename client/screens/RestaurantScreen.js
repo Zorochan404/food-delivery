@@ -3,14 +3,18 @@ import {
     SafeAreaProvider,
     useSafeAreaInsets,
   } from 'react-native-safe-area-context';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { urlFor } from '../sanity';
 import { ArrowLeftIcon, ChevronRightIcon, QuestionMarkCircleIcon } from 'react-native-heroicons/outline';
 import { MapPinIcon, StarIcon } from 'react-native-heroicons/solid'
 import DishRow from '../components/DishRow';
+import BasketIcon from '../components/BasketIcon';
+import { useDispatch } from 'react-redux';
+import { setRestaurant } from '../features/restaurantSlice';
 
 const RestaurantScreen = () => {
+  const dispatch = useDispatch()
     const insets = useSafeAreaInsets();
     const{ params: {
         id,
@@ -28,8 +32,26 @@ const RestaurantScreen = () => {
 
 const navigation = useNavigation()
 
+
+useEffect(() =>{
+  dispatch(setRestaurant({
+    id,
+    imgUrl,
+    short_description,
+    title,
+    dishes,
+    rating,
+    genre,
+    long,
+    adderss,
+    lat,
+  }))
+},[])
+
     
   return (
+    <>
+    <BasketIcon/>
     <ScrollView      style={{
         // paddingTop: insets.top,
         // paddingBottom: insets.bottom,
@@ -65,7 +87,7 @@ const navigation = useNavigation()
                     <ChevronRightIcon color= "#00CCBB"></ChevronRightIcon>
                 </TouchableOpacity>
       </View>
-      <View>
+      <View className= "pb-36">
         <Text className= "px-4 pt-6 mb-3 font-bold text-xl">Menu</Text>
 
         {dishes.map((dish)=> (
@@ -80,6 +102,8 @@ const navigation = useNavigation()
         ))}
       </View>
     </ScrollView>
+    </>
+
   )
 }
 
